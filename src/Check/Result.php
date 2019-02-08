@@ -4,8 +4,19 @@ namespace Leankoala\HealthFoundation\Check;
 
 class Result
 {
+    /**
+     * Healthy
+     */
     const STATUS_PASS = 'pass';
+
+    /**
+     * Healthy, with some concerns
+     */
     const STATUS_WARN = 'warn';
+
+    /**
+     * Unhealthy
+     */
     const STATUS_FAIL = 'fail';
 
     private static $statuses = [

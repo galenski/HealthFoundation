@@ -39,7 +39,7 @@ $formatter->handle(
 
 ### Formatter
 
-It is possible to produce any kind of health check format. At the moment the IETF standard ([Health Check Response Format for HTTP APIs](https://tools.ietf.org/id/draft-inadarei-api-health-check-01.html)) is supported 
+It is possible to produce any kind of health check format. At the moment the IETF standard ([Health Check Response Format for HTTP APIs](https://datatracker.ietf.org/doc/draft-inadarei-api-health-check/?include_text=1)) is supported 
 but there is an simple interface that can be implemented to create new formats.
 
 ## Status
@@ -48,6 +48,9 @@ but there is an simple interface that can be implemented to create new formats.
 
 As this is an open source project we want everybody to submit their own checks, that is why we provide the main author of every check in this list.
 
+- Basic
+  - Number
+    - **LessThan** (nils.langner@leankoala.com) 
 - Database
   - MySQL
     - Slave
@@ -69,8 +72,9 @@ As this is an open source project we want everybody to submit their own checks, 
     - **NumberOfReturnedElements**
   - Redis
     - **isRunning**
-  - Files
-    - **isWritable**  
+- Files
+  - **isWritable**  
+  - **FileEditedAfter**    
 - Tool
   - Wordpress
     - Plugins
@@ -84,5 +88,4 @@ As this is an open source project we want everybody to submit their own checks, 
 - **Config files** - it should be possible to configure the health check without writing a line of code
 - **Suggestions** - the tool should find on its own what can be tested
 - **Plugins** - It would be great if there where plugins/bundles for WordPress, Shopware, Symfony etc.    
-    
-  
+
