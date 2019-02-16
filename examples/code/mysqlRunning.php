@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . '/../vendor/autoload.php';
+include_once __DIR__ . '/../../vendor/autoload.php';
 
 $foundation = new \Leankoala\HealthFoundation\HealthFoundation();
 
@@ -12,5 +12,9 @@ $foundation->registerCheck($mysqlRunningCheck);
 
 $runResult = $foundation->runHealthCheck();
 
-$formatter = new \Leankoala\HealthFoundation\Result\Format\Ietf\IetfFormat();
-$formatter->handle($runResult, 'Mysql slave server is up and running.', 'Some problems occurred for mysql slave server.');
+$formatter = new \Leankoala\HealthFoundation\Result\Format\Ietf\IetfFormat(
+    'Mysql slave server is up and running.',
+    'Some problems occurred for mysql slave server.'
+);
+
+$formatter->handle($runResult);

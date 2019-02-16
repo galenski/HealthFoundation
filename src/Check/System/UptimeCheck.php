@@ -27,14 +27,12 @@ class UptimeCheck implements Check
     public function run()
     {
         try {
-
             $uptime = $this->getUptime();
             if ($this->dateIntervalToSeconds($uptime) > $this->dateIntervalToSeconds($this->dateInterval)) {
                 return new Result(Result::STATUS_FAIL, 'Servers uptime is too high (' . $this->dateIntervalToString($uptime) . ')');
             } else {
                 return new Result(Result::STATUS_PASS, 'Servers uptime is ok (' . $this->dateIntervalToString($uptime) . ')');
             }
-
         } catch (\Exception $e) {
             return new Result(Result::STATUS_FAIL, 'Error: ' . $e->getMessage());
         }
@@ -46,16 +44,16 @@ class UptimeCheck implements Check
      */
     private function getUptime()
     {
-        $uptime = \uptime();
+        $uptimeTimestamp = \uptime();
 
-        if ($uptime === false) {
-            throw new \Exception('Uptime() cannot be calculated.');
-        }
-
-        $systemStartDate = new \DateTime(date('Y-m-d H:i:s', $uptime));
+        $systemStartDate = new \DateTime(date('Y-m-d H:i:s', (int)$uptimeTimestamp));
         $now = new \DateTime();
 
         $uptime = $systemStartDate->diff($now);
+
+        if ($uptime === false) {
+            throw new \RuntimeException('Uptime cannot be calculated.');
+        }
 
         return $uptime;
     }

@@ -12,6 +12,38 @@ HealthFoundation was designed to be run standalone or within any project.
 
 ### Example
 
+#### Config file
+
+This example checks if the disc space is used is less than 95 percent. 
+
+```bash
+$ php bin/health.php run health.yml
+```
+
+The config file ```health.yml``` could look like this
+
+```yml
+format:
+  class: Leankoala\HealthFoundation\Result\Format\Ietf\IetfFormat
+  parameters:
+    passedMessage: "Storage server is up and running."
+    failureMessage: "Some problems occurred on storage server."
+
+checks:
+  spaceUsed:
+    check: Leankoala\HealthFoundation\Check\Device\SpaceUsedCheck
+    identifier: space_used_check
+    description: 'Space used on storage server'
+    parameters:
+      maxUsageInPercent: 95
+```
+
+For more information on how to use this have a look at the `RunCommand`. 
+
+#### Code
+
+The same check as code
+
 ```php
 # health.php
 
@@ -23,16 +55,20 @@ $foundation = new \Leankoala\HealthFoundation\HealthFoundation();
 $spaceUsedCheck = new \Leankoala\HealthFoundation\Check\Device\SpaceUsedCheck();
 $spaceUsedCheck->init(95);
 
-$foundation->registerCheck($spaceUsedCheck);
+$foundation->registerCheck(
+    $spaceUsedCheck, 
+    'space_used_check', 
+    'Space used on storage server');
 
 $runResult = $foundation->runHealthCheck();
 
-$formatter = new \Leankoala\HealthFoundation\Result\Format\Ietf\IetfFormat();
-    
-$formatter->handle(
-    $runResult, 
+$formatter = new \Leankoala\HealthFoundation\Result\Format\Ietf\IetfFormat(
     'Storage server is up and running.', 
     'Some problems occurred on storage server.'
+);
+    
+$formatter->handle(
+    $runResult  
 );
 ```
 ### Checks
@@ -92,7 +128,7 @@ As this is an open source project we want everybody to submit their own checks, 
     
 ## Outlook / Ideas
 
-- **Config files** - it should be possible to configure the health check without writing a line of code
 - **Suggestions** - the tool should find on its own what can be tested
 - **Plugins** - It would be great if there where plugins/bundles for WordPress, Shopware, Symfony etc.    
-
+- **History** - Remember the last health status
+- **Action** - Do something after a health check fails**

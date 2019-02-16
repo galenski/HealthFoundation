@@ -9,27 +9,29 @@ use Leankoala\HealthFoundation\RunResult;
 
 class IetfFormat implements Format
 {
-    const DEFAULT_OUTPUT_PASS = 'Passed.';
+    const DEFAULT_OUTPUT_PASS = 'The health check was passed.';
     const DEFAULT_OUTPUT_WARN = 'Warning.';
-    const DEFAULT_OUTPUT_FAIL = 'Failed.';
+    const DEFAULT_OUTPUT_FAIL = 'The health check failed.';
 
-    public function handle(RunResult $runResult, $passMessage = null, $failMessage = null)
+    private $passMessage = self::DEFAULT_OUTPUT_PASS;
+    private $failMessage = self::DEFAULT_OUTPUT_FAIL;
+
+    public function __construct($passMessage = null, $failMessage = null)
+    {
+        if ($passMessage) {
+            $this->passMessage = $passMessage;
+        }
+
+        if ($failMessage) {
+            $this->failMessage = $failMessage;
+        }
+    }
+
+    public function handle(RunResult $runResult)
     {
         header('Content-Type: application/json');
 
-        if ($runResult->getStatus() == Result::STATUS_PASS) {
-            if (is_null($passMessage)) {
-                $output = self::DEFAULT_OUTPUT_PASS;
-            } else {
-                $output = $passMessage;
-            }
-        } else {
-            if (is_null($failMessage)) {
-                $output = self::DEFAULT_OUTPUT_FAIL;
-            } else {
-                $output = $failMessage;
-            }
-        }
+        $output = $this->getOutput($runResult, $this->passMessage, $this->failMessage);
 
         $details = [];
 
@@ -65,5 +67,24 @@ class IetfFormat implements Format
         ];
 
         echo json_encode($resultArray, JSON_PRETTY_PRINT);
+    }
+
+    private function getOutput(RunResult $runResult, $passMessage = null, $failMessage = null)
+    {
+        if ($runResult->getStatus() == Result::STATUS_PASS) {
+            if (is_null($passMessage)) {
+                $output = self::DEFAULT_OUTPUT_PASS;
+            } else {
+                $output = $passMessage;
+            }
+        } else {
+            if (is_null($failMessage)) {
+                $output = self::DEFAULT_OUTPUT_FAIL;
+            } else {
+                $output = $failMessage;
+            }
+        }
+
+        return $output;
     }
 }
